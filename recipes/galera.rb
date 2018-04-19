@@ -79,6 +79,15 @@ if node['mariadb']['install']['extra_packages']
         action :install
       end
     end
+  elsif node['mariadb']['galera']['wsrep_sst_method'] == 'mariabackup'
+    package 'mariadb-backup-' + node['mariadb']['install']['version'] do
+      action :install
+    end
+    %w(socat pv).each do |pkg|
+      package pkg do
+        action :install
+      end
+    end
   end
 end
 
