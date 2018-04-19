@@ -270,7 +270,7 @@ if platform?('debian', 'ubuntu')
       cmd.error?
     end
     ignore_failure true
-#    sensitive true
+    sensitive true
   end
 end
 
@@ -306,7 +306,7 @@ if node['mariadb']['galera']['wsrep_sst_method'] =~ /^(maria|xtra)backup(-v2)?/
       cmd.error?
     end
     ignore_failure true
-#    sensitive true
+    sensitive true
   end
 end
 
