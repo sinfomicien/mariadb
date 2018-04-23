@@ -7,7 +7,7 @@ default_action :create
 
 property :username, kind_of: String, name_attribute: true
 property :password, kind_of: [String, HashedPassword], sensitive: true
-property :host, kind_of: String, default: 'localhost'
+property :host, kind_of: String, default: 'localhost', desired_state: false
 property :database_name, String
 property :table, String
 property :privileges, Array, default: [:all]
@@ -167,9 +167,10 @@ end
 
 load_current_value do
   require 'mysql2'
-  socket = if node['mariadb']['client']['socket'] && host == 'localhost'
+  socket = if node['mariadb']['client']['socket'] && ctrl_host == 'localhost'
              node['mariadb']['client']['socket']
            end
+
   conn_options = { username: ctrl_user,
                    password: ctrl_password,
                    port: ctrl_port.to_s,
@@ -179,7 +180,7 @@ load_current_value do
     results = mysql_connection.query("SELECT User,Host FROM mysql.user WHERE User='#{username}' AND Host='#{host}';")
     current_value_does_not_exist! if results.count == 0
   ensure
-    mysql_connection.close
+	  mysql_connection.close if !mysql_connection.nil?
   end
 end
 
